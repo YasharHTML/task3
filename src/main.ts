@@ -19,8 +19,18 @@ const server = createServer((req, res) => {
 
         if (requestCount % 5 !== 0) {
             requestCount++;
+            const news = getNews(page, size);
             res.writeHead(200, { "Content-Type": "application/json" });
-            res.write(JSON.stringify(getNews(page, size)));
+            res.write(
+                JSON.stringify({
+                    pagination: {
+                        nextPage: page + 1,
+                        size,
+                        length: news.length,
+                    },
+                    news,
+                })
+            );
             res.end();
         } else {
             requestCount++;
